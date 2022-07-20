@@ -1,7 +1,7 @@
 /*******************************************************************************************************************************
-ExportDBApplication.java
+ApplicationStart.java
 
-Copyright � 2022, DroidSoft. All rights reserved.
+Copyright © 2022, DroidSoft. All rights reserved.
 The Programs (which include both the software and documentation) contain proprietary information of DroidSoft;
 they are provided under a license agreement containing restrictions on use and disclosure and are also protected by
 copyright, patent and other intellectual and industrial property law. Reverse engineering, disassembly or de-compilation of
@@ -15,10 +15,10 @@ reproduced or transmitted in any form or by any means, electronic or mechanical,
 written permission of DroidSoft.
 
 Author : ymohammad
-Date   : Jul 19, 2022
+Date   : Jul 21, 2022
 
 Last modified by : ymohammad
-Last modified on : Jul 19, 2022
+Last modified on : Jul 21, 2022
 
 *******************************************************************************************************************************/
 
@@ -28,6 +28,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Scanner;
+
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
 
 import in.droidsoft.dbmanager.exportdb.config.AppContext;
 import in.droidsoft.dbmanager.exportdb.rdbms.executor.ConnectionManager;
@@ -39,20 +44,42 @@ import in.droidsoft.dbmanager.exportdb.store.sqlscript.FileSourceSQLScriptStore;
 import in.droidsoft.dbmanager.exportdb.util.AppConstants;
 import in.droidsoft.dbmanager.exportdb.util.AppUtils;
 
-public class ExportDBApplication {
+/**
+* Class ApplicationStart
+*/
+@Component
+public class ApplicationStart implements ApplicationListener<ContextRefreshedEvent> {
 
-	public static void main(String[] args) {
-		logMsg("Starting the Program Execution - " + LocalDateTime.now());
-		if (args == null || args.length == 0) {
-			logErrorMsg("Data Directory required to proceed futher. Terminating the program.");
-			System.exit(0);
-		}
-		String dataDirectory = args[0];
-		startApplicationProcess(dataDirectory);
-		logMsg("Execution Completes - " + LocalDateTime.now());
+	public void onApplicationEvent(ContextRefreshedEvent event) {
+		System.out.println("******************************************************************************");
+		System.out.println("\t\tAPPLICATION IS STARTING");
+		System.out.println("******************************************************************************");
+		//System.out.println(event);
+		start();
 	}
-
-	private static void startApplicationProcess(String dataDirectory) {
+	private void start() {
+		logMsg("Starting the Program Execution - " + LocalDateTime.now());
+		Scanner scan = null;
+		try {
+			scan = new Scanner(System.in);
+			userInput("Enter the Data Directory :");
+			String dataDirectory = scan.nextLine();
+			if (dataDirectory == null || dataDirectory.trim().length() == 0) {
+				logErrorMsg("Data Directory required to proceed futher. Terminating the program.");
+				System.exit(0);
+			}
+			startApplicationProcess(dataDirectory);
+			logMsg("Execution Completes - " + LocalDateTime.now());
+		} finally {
+			if (scan != null) {
+				scan.close();
+			}
+		}
+	}
+	private void userInput(String msg) {
+		System.out.println(msg);
+	}
+	private void startApplicationProcess(String dataDirectory) {
 		ConnectionManager connManager = null;
 		try {
 			logMsg("Given data directory path :" + dataDirectory);
@@ -89,16 +116,16 @@ public class ExportDBApplication {
 		}
 	}
 
-	private static void logErrorMsg(Exception e) {
+	private void logErrorMsg(Exception e) {
 		String msg = e.getMessage() != null ? e.getMessage() : e.toString();
 		AppUtils.logErrorMsg(msg);
 	}
 
-	private static void logErrorMsg(String msg) {
+	private void logErrorMsg(String msg) {
 		AppUtils.logErrorMsg(msg);
 	}
 
-	private static void logMsg(String msg) {
+	private void logMsg(String msg) {
 		AppUtils.logMsg(msg);
 	}
 }
