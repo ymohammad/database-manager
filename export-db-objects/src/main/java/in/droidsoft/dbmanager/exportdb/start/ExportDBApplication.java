@@ -1,7 +1,7 @@
 /*******************************************************************************************************************************
 ExportDBApplication.java
 
-Copyright © 2022, DroidSoft. All rights reserved.
+Copyright ï¿½ 2022, DroidSoft. All rights reserved.
 The Programs (which include both the software and documentation) contain proprietary information of DroidSoft;
 they are provided under a license agreement containing restrictions on use and disclosure and are also protected by
 copyright, patent and other intellectual and industrial property law. Reverse engineering, disassembly or de-compilation of
@@ -29,11 +29,14 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import in.droidsoft.dbmanager.exportdb.config.AppContext;
 import in.droidsoft.dbmanager.exportdb.rdbms.executor.ConnectionManager;
 import in.droidsoft.dbmanager.exportdb.rdbms.executor.DBScriptExecutor;
 import in.droidsoft.dbmanager.exportdb.rdbms.model.SQLStatement;
 import in.droidsoft.dbmanager.exportdb.store.DatabasePropsStore;
 import in.droidsoft.dbmanager.exportdb.store.DatabaseScriptStore;
+import in.droidsoft.dbmanager.exportdb.store.sqlscript.FileSourceSQLScriptStore;
+import in.droidsoft.dbmanager.exportdb.util.AppConstants;
 import in.droidsoft.dbmanager.exportdb.util.AppUtils;
 
 public class ExportDBApplication {
@@ -53,8 +56,11 @@ public class ExportDBApplication {
 		ConnectionManager connManager = null;
 		try {
 			logMsg("Given data directory path :" + dataDirectory);
-			logMsg("Reading DB Properties to establish Database Connection");
-			DatabasePropsStore propStore = new DatabasePropsStore(dataDirectory);
+			StartupCheck.doStartupCheck(dataDirectory);
+			
+			AppContext appContext = AppContext.getInstance();
+			appContext.setDataDirectoryPath(dataDirectory);
+			DatabasePropsStore propStore = new DatabasePropsStore();
 			connManager = new ConnectionManager(propStore.getDatabaseProps());
 			Connection dbConnection = connManager.getConnection();
 			if (dbConnection == null) {
@@ -63,7 +69,7 @@ public class ExportDBApplication {
 			}
 			logMsg("Database Connection Establish Successfully.");
 			logMsg("Loading the DB Script to be executed...Please wait.");
-			DatabaseScriptStore dbStore = new DatabaseScriptStore(dataDirectory);
+			DatabaseScriptStore dbStore = new FileSourceSQLScriptStore(AppConstants.DB_STARTUP_SCRIPT_FILE_NAME);
 			List<SQLStatement> dbScript = dbStore.getDBScript();
 			if (dbScript == null || dbScript.size() == 0) {
 				logErrorMsg("No Script Lines to execute.");
@@ -75,11 +81,17 @@ public class ExportDBApplication {
 			executor.executeDBScript(dbConnection, dbScript);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			logErrorMsg(e);
 		} finally {
 			if (connManager != null) {
 				connManager.closeDbConnection();
 			}
 		}
+	}
+
+	private static void logErrorMsg(Exception e) {
+		String msg = e.getMessage() != null ? e.getMessage() : e.toString();
+		AppUtils.logErrorMsg(msg);
 	}
 
 	private static void logErrorMsg(String msg) {

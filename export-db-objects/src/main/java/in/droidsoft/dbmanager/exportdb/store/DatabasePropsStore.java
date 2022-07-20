@@ -1,7 +1,7 @@
 /*******************************************************************************************************************************
 DatabasePropsStore.java
 
-Copyright © 2022, DroidSoft. All rights reserved.
+Copyright ï¿½ 2022, DroidSoft. All rights reserved.
 The Programs (which include both the software and documentation) contain proprietary information of DroidSoft;
 they are provided under a license agreement containing restrictions on use and disclosure and are also protected by
 copyright, patent and other intellectual and industrial property law. Reverse engineering, disassembly or de-compilation of
@@ -29,17 +29,18 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
+import in.droidsoft.dbmanager.exportdb.config.AppContext;
 import in.droidsoft.dbmanager.exportdb.rdbms.model.DBProps;
+import in.droidsoft.dbmanager.exportdb.util.AppConstants;
 import in.droidsoft.dbmanager.exportdb.util.AppUtils;
 
 public class DatabasePropsStore {
 
-	private static final String DB_PROP_FILE_NAME = "dbdetails.properties";
-	private String dataDirectoryPath = null;
 	private DBProps dbProps = null;
+	protected AppContext appContext = null;
 	
-	public DatabasePropsStore(String dataDirectoryPath) {
-		this.dataDirectoryPath = dataDirectoryPath;
+	public DatabasePropsStore() {
+		this.appContext = AppContext.getInstance();
 		this.loadDBProperties();
 	}
 	
@@ -48,17 +49,17 @@ public class DatabasePropsStore {
 		return clonedCopy;
 	}
 	private void loadDBProperties() {
-		File dbPropsFile = AppUtils.getResourceFile(dataDirectoryPath, DB_PROP_FILE_NAME);
+		File dbPropsFile = AppUtils.getResourceFile(this.appContext.getDataDirectoryPath(), AppConstants.DB_PROPERTIES_FILE_NAME);
 		FileReader reader = null;
 		try {
 			reader = new FileReader(dbPropsFile);
 			Properties props = new Properties();
 			props.load(reader);
 			
-			String driverClassName = props.getProperty("source.appsdatasource.driverClassName");
-			String dbUrl = props.getProperty("source.appsdatasource.jdbcUrl");
-			String userName = props.getProperty("source.appsdatasource.username");
-			String password = props.getProperty("source.appsdatasource.password");
+			String driverClassName = props.getProperty("source.driverClassName");
+			String dbUrl = props.getProperty("source.jdbcUrl");
+			String userName = props.getProperty("source.username");
+			String password = props.getProperty("source.password");
 			
 			this.dbProps = new DBProps(userName, password, dbUrl, driverClassName);
 		} catch (IOException e) {

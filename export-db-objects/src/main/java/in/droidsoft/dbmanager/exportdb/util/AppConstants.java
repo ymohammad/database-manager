@@ -1,7 +1,7 @@
 /*******************************************************************************************************************************
-DatabaseScriptStore.java
+AppConstants.java
 
-Copyright � 2022, DroidSoft. All rights reserved.
+Copyright © 2022, DroidSoft. All rights reserved.
 The Programs (which include both the software and documentation) contain proprietary information of DroidSoft;
 they are provided under a license agreement containing restrictions on use and disclosure and are also protected by
 copyright, patent and other intellectual and industrial property law. Reverse engineering, disassembly or de-compilation of
@@ -15,32 +15,28 @@ reproduced or transmitted in any form or by any means, electronic or mechanical,
 written permission of DroidSoft.
 
 Author : ymohammad
-Date   : Jul 19, 2022
+Date   : Jul 20, 2022
 
 Last modified by : ymohammad
-Last modified on : Jul 19, 2022
+Last modified on : Jul 20, 2022
 
 *******************************************************************************************************************************/
 
-package in.droidsoft.dbmanager.exportdb.store;
+package in.droidsoft.dbmanager.exportdb.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import in.droidsoft.dbmanager.exportdb.config.AppContext;
-import in.droidsoft.dbmanager.exportdb.rdbms.model.SQLStatement;
-
-public abstract class DatabaseScriptStore {
-	protected AppContext appContext = null;
-	protected ArrayList<SQLStatement> dbScriptList = new ArrayList<SQLStatement>();
-	
-	public DatabaseScriptStore() {
-		this.appContext = AppContext.getInstance();
+/**
+* Class AppConstants
+*/
+public class AppConstants {
+	private AppConstants() {
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<SQLStatement> getDBScript() {
-		List<SQLStatement> returnList =  (List<SQLStatement>) this.dbScriptList.clone();
-		return returnList;
-	}
+	public static final String DB_PROPERTIES_FILE_NAME = "dbdetails.properties";
+	public static final String DB_STARTUP_SCRIPT_FILE_NAME = "startupDBScript.sql";
+	public static final String EXPORT_OBJECTS_LIST_SELECT_QUERY_FILE_NAME="exportObjectsListSelectQuery.sql";
+	
+	public static final String[] DDL_STATEMENT_TYPE_ARRAY = {"CREATE", "DROP", "ALTER", "TRUNCATE", "COMMENT", "RENAME"};
+	public static final String[] DQL_STATEMENT_TYPE_ARRAY = {"SELECT"};
+	public static final String[] DML_STATEMENT_TYPE_ARRAY = {"INSERT", "UPDATE", "DELETE"};
+	public static final String[] DCL_STATEMENT_TYPE_ARRAY = {"GRANT", "REVOKE"};
 }

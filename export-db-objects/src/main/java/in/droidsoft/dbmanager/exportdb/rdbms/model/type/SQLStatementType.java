@@ -1,7 +1,7 @@
 /*******************************************************************************************************************************
 SQLStatementType.java
 
-Copyright © 2022, DroidSoft. All rights reserved.
+Copyright ï¿½ 2022, DroidSoft. All rights reserved.
 The Programs (which include both the software and documentation) contain proprietary information of DroidSoft;
 they are provided under a license agreement containing restrictions on use and disclosure and are also protected by
 copyright, patent and other intellectual and industrial property law. Reverse engineering, disassembly or de-compilation of
@@ -26,5 +26,7 @@ package in.droidsoft.dbmanager.exportdb.rdbms.model.type;
 
 public enum SQLStatementType {
 	DDL,
-	DML
+	DML, 
+	DQL,
+	DCL
 }

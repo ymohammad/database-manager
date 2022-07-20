@@ -32,4 +32,19 @@ public class AppUtils {
 	public static void logErrorMsg(String msg) {
 		System.out.println("[ERROR] - " + msg);
 	}
+
+	public static boolean isContainsStartsWith(String strToTest, String[] valueArray) {
+		if (strToTest == null || strToTest.trim().length() == 0) {
+			return false;
+		}
+		if (valueArray == null || valueArray.length == 0) {
+			return false;
+		}
+		for (String eachValue: valueArray) {
+			if (strToTest.toUpperCase().trim().startsWith(eachValue)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
