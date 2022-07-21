@@ -1,5 +1,5 @@
 /*******************************************************************************************************************************
-AppConstants.java
+AllObjectsEntity.java
 
 Copyright © 2022, DroidSoft. All rights reserved.
 The Programs (which include both the software and documentation) contain proprietary information of DroidSoft;
@@ -15,29 +15,39 @@ reproduced or transmitted in any form or by any means, electronic or mechanical,
 written permission of DroidSoft.
 
 Author : ymohammad
-Date   : Jul 20, 2022
+Date   : Jul 21, 2022
 
 Last modified by : ymohammad
-Last modified on : Jul 20, 2022
+Last modified on : Jul 21, 2022
 
 *******************************************************************************************************************************/
 
-package in.droidsoft.dbmanager.exportdb.util;
+package in.droidsoft.dbmanager.exportdb.rdbms.model.oracle;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
-* Class AppConstants
+* Class AllObjectsEntity
 */
-public class AppConstants {
-	private AppConstants() {
-	}
+@Entity 
+@Table (name = "ALL_OBJECTS")
+@Data
+@NoArgsConstructor
+public class AllObjectsEntity {
+	@Column(name = "OBJECT_ID")
+	private Long objectId;
 	
-	public static final String DB_PROPERTIES_FILE_NAME = "dbdetails.properties";
-	public static final String EXPORT_PROPERTIES_FILE_NAME = "export.properties";
-	public static final String DB_STARTUP_SCRIPT_FILE_NAME = "startupDBScript.sql";
-	public static final String EXPORT_OBJECTS_LIST_SELECT_QUERY_FILE_NAME="exportObjectsListSelectQuery.sql";
+	@Column(name = "OWNER")
+	private String owner;
 	
-	public static final String[] DDL_STATEMENT_TYPE_ARRAY = {"CREATE", "DROP", "ALTER", "TRUNCATE", "COMMENT", "RENAME"};
-	public static final String[] DQL_STATEMENT_TYPE_ARRAY = {"SELECT"};
-	public static final String[] DML_STATEMENT_TYPE_ARRAY = {"INSERT", "UPDATE", "DELETE"};
-	public static final String[] DCL_STATEMENT_TYPE_ARRAY = {"GRANT", "REVOKE"};
+	@Column(name = "OBJECT_NAME")
+	private String objectName;
+	
+	@Column(name = "OBJECT_TYPE")
+	private String objectType;
 }

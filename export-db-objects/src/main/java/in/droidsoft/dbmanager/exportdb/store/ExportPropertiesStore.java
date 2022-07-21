@@ -1,7 +1,7 @@
 /*******************************************************************************************************************************
-DatabaseScriptStore.java
+ExportPropertiesStore.java
 
-Copyright ï¿½ 2022, DroidSoft. All rights reserved.
+Copyright © 2022, DroidSoft. All rights reserved.
 The Programs (which include both the software and documentation) contain proprietary information of DroidSoft;
 they are provided under a license agreement containing restrictions on use and disclosure and are also protected by
 copyright, patent and other intellectual and industrial property law. Reverse engineering, disassembly or de-compilation of
@@ -15,27 +15,58 @@ reproduced or transmitted in any form or by any means, electronic or mechanical,
 written permission of DroidSoft.
 
 Author : ymohammad
-Date   : Jul 19, 2022
+Date   : Jul 21, 2022
 
 Last modified by : ymohammad
-Last modified on : Jul 19, 2022
+Last modified on : Jul 21, 2022
 
 *******************************************************************************************************************************/
 
 package in.droidsoft.dbmanager.exportdb.store;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Properties;
 
-import in.droidsoft.dbmanager.exportdb.rdbms.model.SQLStatement;
+import in.droidsoft.dbmanager.exportdb.props.ExportProp;
+import in.droidsoft.dbmanager.exportdb.util.AppConstants;
+import in.droidsoft.dbmanager.exportdb.util.AppUtils;
+import lombok.Getter;
 
-public abstract class DatabaseScriptStore extends ApplicationStore {
+/**
+* Class ExportPropertiesStore
+*/
+@Getter
+public class ExportPropertiesStore extends ApplicationStore {
+	private ExportProp exportProps = null;
 	
-	protected ArrayList<SQLStatement> dbScriptList = new ArrayList<SQLStatement>();
-	
-	@SuppressWarnings("unchecked")
-	public List<SQLStatement> getDBScript() {
-		List<SQLStatement> returnList =  (List<SQLStatement>) this.dbScriptList.clone();
-		return returnList;
+	public ExportPropertiesStore() {
+		super();
+		this.loadExportProps();
+	}
+
+	private void loadExportProps() {
+		File exoprtPropFile = AppUtils.getResourceFile(this.appContext.getDataDirectoryPath(), AppConstants.EXPORT_PROPERTIES_FILE_NAME);
+		FileReader reader = null;
+		try {
+			reader = new FileReader(exoprtPropFile);
+			Properties props = new Properties();
+			props.load(reader);
+			
+			String databaseType = props.getProperty("databaseType");
+			
+			this.exportProps = new ExportProp(databaseType);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 }

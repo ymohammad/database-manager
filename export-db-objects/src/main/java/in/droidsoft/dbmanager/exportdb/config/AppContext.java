@@ -24,15 +24,22 @@ Last modified on : Jul 20, 2022
 
 package in.droidsoft.dbmanager.exportdb.config;
 
+import in.droidsoft.dbmanager.exportdb.rdbms.model.SQLStatement;
+import lombok.Getter;
+import lombok.Setter;
+
 /**
 * Class AppContext
 */
+@Setter
+@Getter
 public class AppContext {
 	
 	private static AppContext appContext = null;
 	private AppContext() {}
 	
 	private String dataDirectoryPath = null;
+	private SQLStatement exportAllObjSqlStatemnt = null;
 	
 	public static AppContext getInstance() {
 		if (appContext == null) {
@@ -42,11 +49,5 @@ public class AppContext {
 	}
 	private static void initilizeContext() {
 		appContext = new AppContext();
-	}
-	public String getDataDirectoryPath() {
-		return dataDirectoryPath;
-	}
-	public void setDataDirectoryPath(String dataDirectoryPath) {
-		this.dataDirectoryPath = dataDirectoryPath;
 	}
 }

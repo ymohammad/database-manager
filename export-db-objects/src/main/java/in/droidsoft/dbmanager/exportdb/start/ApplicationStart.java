@@ -24,7 +24,6 @@ Last modified on : Jul 21, 2022
 
 package in.droidsoft.dbmanager.exportdb.start;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,10 +35,9 @@ import org.springframework.stereotype.Component;
 
 import in.droidsoft.dbmanager.exportdb.config.AppContext;
 import in.droidsoft.dbmanager.exportdb.rdbms.executor.ConnectionManager;
-import in.droidsoft.dbmanager.exportdb.rdbms.executor.DBScriptExecutor;
 import in.droidsoft.dbmanager.exportdb.rdbms.model.SQLStatement;
-import in.droidsoft.dbmanager.exportdb.store.DatabasePropsStore;
 import in.droidsoft.dbmanager.exportdb.store.DatabaseScriptStore;
+import in.droidsoft.dbmanager.exportdb.store.ExportPropertiesStore;
 import in.droidsoft.dbmanager.exportdb.store.sqlscript.FileSourceSQLScriptStore;
 import in.droidsoft.dbmanager.exportdb.util.AppConstants;
 import in.droidsoft.dbmanager.exportdb.util.AppUtils;
@@ -87,6 +85,15 @@ public class ApplicationStart implements ApplicationListener<ContextRefreshedEve
 			
 			AppContext appContext = AppContext.getInstance();
 			appContext.setDataDirectoryPath(dataDirectory);
+
+			ExportPropertiesStore exportStore = new ExportPropertiesStore();
+			
+			DatabaseScriptStore dbStore = new FileSourceSQLScriptStore(AppConstants.EXPORT_OBJECTS_LIST_SELECT_QUERY_FILE_NAME);
+			List<SQLStatement> dbScript = dbStore.getDBScript();
+			SQLStatement allObjSqlStatement = dbScript.get(0);
+			
+			
+			/*
 			DatabasePropsStore propStore = new DatabasePropsStore();
 			connManager = new ConnectionManager(propStore.getDatabaseProps());
 			Connection dbConnection = connManager.getConnection();
@@ -106,6 +113,7 @@ public class ApplicationStart implements ApplicationListener<ContextRefreshedEve
 			logMsg("Start executing the SQL Script.");
 			DBScriptExecutor executor = new DBScriptExecutor();
 			executor.executeDBScript(dbConnection, dbScript);
+			*/
 		} catch (SQLException e) {
 			e.printStackTrace();
 			logErrorMsg(e);
