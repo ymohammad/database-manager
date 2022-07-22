@@ -11,7 +11,7 @@ public class AppUtils {
 	 * @return
 	 */
 	public static File getResourceFile(String parentDirPath, String resourceFileName) {
-		if (parentDirPath == null || parentDirPath.trim().length() == 0) {
+		if (isEmpty(parentDirPath)) {
 			throw new RuntimeException("Cannot get the Resource Directory.");
 		}
 		File dataDirectory = new File(parentDirPath);
@@ -34,7 +34,7 @@ public class AppUtils {
 	}
 
 	public static boolean isContainsStartsWith(String strToTest, String[] valueArray) {
-		if (strToTest == null || strToTest.trim().length() == 0) {
+		if (isEmpty(strToTest)) {
 			return false;
 		}
 		if (valueArray == null || valueArray.length == 0) {
@@ -46,5 +46,9 @@ public class AppUtils {
 			}
 		}
 		return false;
+	}
+	public static boolean isEmpty(String str) {
+		boolean res = str == null || str.trim().length() == 0;
+		return res;
 	}
 }

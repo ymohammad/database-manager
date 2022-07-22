@@ -24,6 +24,8 @@ Last modified on : Jul 21, 2022
 
 package in.droidsoft.dbmanager.exportdb.rdbms.oracle.repository;
 
+import java.math.BigDecimal;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -34,5 +36,5 @@ import in.droidsoft.dbmanager.exportdb.rdbms.oracle.repository.export.ExportObje
 * Class AllObjectRepsoitory
 */
 @Repository
-public interface AllObjectRepsoitory extends JpaRepository<AllObjectsEntity, Long>, ExportObjectRepository {
+public interface AllObjectRepsoitory extends JpaRepository<AllObjectsEntity, BigDecimal>, ExportObjectRepository {
 }

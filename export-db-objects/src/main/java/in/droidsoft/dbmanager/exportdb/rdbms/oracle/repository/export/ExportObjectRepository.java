@@ -26,7 +26,7 @@ package in.droidsoft.dbmanager.exportdb.rdbms.oracle.repository.export;
 
 import java.util.List;
 
-import in.droidsoft.dbmanager.exportdb.rdbms.model.oracle.AllObjectsEntity;
+import javax.persistence.Tuple;
 
 /**
 * Class ExportObjectRepository
@@ -37,5 +37,5 @@ public interface ExportObjectRepository {
 	 * @param nativeSqlQuery
 	 * @return
 	 */
-	public List<AllObjectsEntity> getAllObjectsEntity(String nativeSqlQuery);
+	public List<Tuple> getAllObjectsEntity(String nativeSqlQuery);
 }

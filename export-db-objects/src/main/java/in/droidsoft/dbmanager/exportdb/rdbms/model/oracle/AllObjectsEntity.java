@@ -24,8 +24,11 @@ Last modified on : Jul 21, 2022
 
 package in.droidsoft.dbmanager.exportdb.rdbms.model.oracle;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -39,8 +42,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class AllObjectsEntity {
+	@Id
 	@Column(name = "OBJECT_ID")
-	private Long objectId;
+	private BigDecimal objectId;
 	
 	@Column(name = "OWNER")
 	private String owner;

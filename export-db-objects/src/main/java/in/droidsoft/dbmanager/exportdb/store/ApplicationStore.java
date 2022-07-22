@@ -24,14 +24,38 @@ Last modified on : Jul 21, 2022
 
 package in.droidsoft.dbmanager.exportdb.store;
 
+import java.util.List;
+
 import in.droidsoft.dbmanager.exportdb.config.AppContext;
+import in.droidsoft.dbmanager.exportdb.props.ExportProp;
+import in.droidsoft.dbmanager.exportdb.rdbms.model.SQLStatement;
+import in.droidsoft.dbmanager.exportdb.store.sqlscript.FileSourceSQLScriptStore;
+import in.droidsoft.dbmanager.exportdb.util.AppConstants;
+import lombok.Getter;
 
 /**
 * Class ApplicationStore
 */
-public abstract class ApplicationStore {
-	protected AppContext appContext = null;
-	public ApplicationStore() {
-		this.appContext = AppContext.getInstance();
+@Getter
+public class ApplicationStore {
+	private AppContext appContext = null;
+	private ExportProp exportProps;
+	private SQLStatement exportAllObjSqlStatemnt;
+	
+	public ApplicationStore(AppContext appContext) {
+		this.appContext = appContext;
+		this.loadExportProps();
+		this.loadExportObjectsStatement();
+	}
+
+	private void loadExportObjectsStatement() {
+		DatabaseScriptStore scriptStore = new FileSourceSQLScriptStore(appContext, AppConstants.EXPORT_OBJECTS_LIST_SELECT_QUERY_FILE_NAME);
+		List<SQLStatement> dbScript = scriptStore.getDBScript();
+		this.exportAllObjSqlStatemnt = dbScript != null && dbScript.size() > 0 ? dbScript.get(0) : null;
+	}
+
+	private void loadExportProps() {
+		ExportPropertiesStore propStore = new ExportPropertiesStore(this.appContext);
+		this.exportProps = propStore.getExportProps();
 	}
 }

@@ -29,7 +29,7 @@ import java.util.List;
 
 import in.droidsoft.dbmanager.exportdb.rdbms.model.SQLStatement;
 
-public abstract class DatabaseScriptStore extends ApplicationStore {
+public class DatabaseScriptStore {
 	
 	protected ArrayList<SQLStatement> dbScriptList = new ArrayList<SQLStatement>();
 	

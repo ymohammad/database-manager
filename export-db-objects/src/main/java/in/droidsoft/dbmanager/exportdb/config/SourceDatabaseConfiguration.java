@@ -47,7 +47,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 */
 @Configuration
 @PropertySources({ @PropertySource("classpath:application.properties") })
-@EnableJpaRepositories(basePackages = "in.droidsoft.dbmanager.exportdb.rdbms.repository", 
+@EnableJpaRepositories(basePackages = "in.droidsoft.dbmanager.exportdb.rdbms.oracle.repository", 
 						entityManagerFactoryRef = "srcEntityManager", 
 						transactionManagerRef = "srcTransactionManager")
 public class SourceDatabaseConfiguration {

@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import in.droidsoft.dbmanager.exportdb.config.AppContext;
 import in.droidsoft.dbmanager.exportdb.rdbms.model.SQLStatement;
 import in.droidsoft.dbmanager.exportdb.rdbms.model.type.SQLStatementType;
 import in.droidsoft.dbmanager.exportdb.store.DatabaseScriptStore;
@@ -39,18 +40,19 @@ import in.droidsoft.dbmanager.exportdb.util.AppUtils;
 * Class FileSourceSQLScriptStore
 */
 public class FileSourceSQLScriptStore extends DatabaseScriptStore {
+	private AppContext appContext = null;
 	private String sqlFileName = null;
 	
-	
-	public FileSourceSQLScriptStore(String sqlFileName) {
+	public FileSourceSQLScriptStore(AppContext appContext, String sqlFileName) {
 		super();
+		this.appContext = appContext;
 		this.sqlFileName = sqlFileName;
 		this.readScriptFile();
 	}
 
 	private void readScriptFile() {
 		File dbScriptFile = this.getDbScriptFile();
-		AppUtils.logMsg("DatabaseScriptStore.readScriptFile() reading script details..." + dbScriptFile.getAbsolutePath() );
+		AppUtils.logMsg("Reading Select Query from " + dbScriptFile.getAbsolutePath() );
 		this.parseAndReadScriptFile(dbScriptFile);
 	}
 
@@ -141,6 +143,10 @@ public class FileSourceSQLScriptStore extends DatabaseScriptStore {
 
 	private String removeSemicolon(String scriptLine) {
 		if (scriptLine == null) return scriptLine;
+		
+		if (scriptLine.indexOf(";") == -1 ) {
+			return scriptLine;
+		}
 		return((scriptLine.trim()).substring(0,scriptLine.trim().length()-1));
 	}
 	private File getDbScriptFile() {

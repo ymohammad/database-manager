@@ -40,4 +40,7 @@ public class AppConstants {
 	public static final String[] DQL_STATEMENT_TYPE_ARRAY = {"SELECT"};
 	public static final String[] DML_STATEMENT_TYPE_ARRAY = {"INSERT", "UPDATE", "DELETE"};
 	public static final String[] DCL_STATEMENT_TYPE_ARRAY = {"GRANT", "REVOKE"};
+	
+	
+	public static final String ORACLE_SERVICE_TYPE = "ORACLE";
 }

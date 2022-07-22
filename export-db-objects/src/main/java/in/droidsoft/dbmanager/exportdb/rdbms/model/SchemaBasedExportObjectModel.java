@@ -1,7 +1,7 @@
 /*******************************************************************************************************************************
-ExportObjectRepositoryImpl.java
+SchemaBasedExportObjectModel.java
 
-Copyright Â© 2022, DroidSoft. All rights reserved.
+Copyright © 2022, DroidSoft. All rights reserved.
 The Programs (which include both the software and documentation) contain proprietary information of DroidSoft;
 they are provided under a license agreement containing restrictions on use and disclosure and are also protected by
 copyright, patent and other intellectual and industrial property law. Reverse engineering, disassembly or de-compilation of
@@ -15,36 +15,24 @@ reproduced or transmitted in any form or by any means, electronic or mechanical,
 written permission of DroidSoft.
 
 Author : ymohammad
-Date   : Jul 21, 2022
+Date   : Jul 22, 2022
 
 Last modified by : ymohammad
-Last modified on : Jul 21, 2022
+Last modified on : Jul 22, 2022
 
 *******************************************************************************************************************************/
 
-package in.droidsoft.dbmanager.exportdb.rdbms.oracle.repository.export;
+package in.droidsoft.dbmanager.exportdb.rdbms.model;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.Tuple;
-
-import org.springframework.stereotype.Repository;
+import lombok.Data;
 
 /**
-* Class ExportObjectRepositoryImpl
+* Class SchemaBasedExportObjectModel
 */
-@Repository
-public class ExportObjectRepositoryImpl implements ExportObjectRepository {
-	@PersistenceContext
-	private EntityManager srcEntityManager;
-
-	@Override
-	public List<Tuple> getAllObjectsEntity(String nativeSqlQuery) {
-		Query query = this.srcEntityManager.createNativeQuery(nativeSqlQuery, Tuple.class);
-		List<Tuple> queryResult = query.getResultList();
-		return queryResult;
-	}
+@Data
+public class SchemaBasedExportObjectModel {
+	private String owner;
+	private List<ExportObjectTypeModel> exportObjectTypeList;
 }

@@ -35,13 +35,6 @@ import in.droidsoft.dbmanager.exportdb.util.AppUtils;
 
 public class DBScriptExecutor {
 
-	public ResultSet executeDBScriptForSelect(Connection dbConnection, SQLStatement sqlStatement) {
-		if (sqlStatement == null || sqlStatement.getScriptLine() == null || sqlStatement.getScriptLine().trim().length() == 0) {
-			System.out.println("[ERROR] ***No Script lines to execute.");
-		}
-		
-		
-	}
 	public void executeDBScript(Connection dbConnection, List<SQLStatement> sqlScript) throws SQLException {
 		if (sqlScript == null || sqlScript.size() == 0) {
 			System.out.println("[ERROR] No Script lines to execute.");

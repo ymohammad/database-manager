@@ -29,6 +29,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
+import in.droidsoft.dbmanager.exportdb.config.AppContext;
 import in.droidsoft.dbmanager.exportdb.props.ExportProp;
 import in.droidsoft.dbmanager.exportdb.util.AppConstants;
 import in.droidsoft.dbmanager.exportdb.util.AppUtils;
@@ -38,11 +39,13 @@ import lombok.Getter;
 * Class ExportPropertiesStore
 */
 @Getter
-public class ExportPropertiesStore extends ApplicationStore {
+public class ExportPropertiesStore {
+	private AppContext appContext;
+	
 	private ExportProp exportProps = null;
 	
-	public ExportPropertiesStore() {
-		super();
+	public ExportPropertiesStore(AppContext appContext) {
+		this.appContext = appContext;
 		this.loadExportProps();
 	}
 
