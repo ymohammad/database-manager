@@ -1,7 +1,7 @@
 /*******************************************************************************************************************************
-DatabaseScriptStore.java
+AppContext.java
 
-Copyright � 2022, DroidSoft. All rights reserved.
+Copyright © 2022, DroidSoft. All rights reserved.
 The Programs (which include both the software and documentation) contain proprietary information of DroidSoft;
 they are provided under a license agreement containing restrictions on use and disclosure and are also protected by
 copyright, patent and other intellectual and industrial property law. Reverse engineering, disassembly or de-compilation of
@@ -15,27 +15,39 @@ reproduced or transmitted in any form or by any means, electronic or mechanical,
 written permission of DroidSoft.
 
 Author : ymohammad
-Date   : Jul 19, 2022
+Date   : Jul 20, 2022
 
 Last modified by : ymohammad
-Last modified on : Jul 19, 2022
+Last modified on : Jul 20, 2022
 
 *******************************************************************************************************************************/
 
-package in.droidsoft.dbmanager.exportdb.store;
-
-import java.util.ArrayList;
-import java.util.List;
+package in.droidsoft.dbmanager.exportdb.config;
 
 import in.droidsoft.dbmanager.exportdb.rdbms.model.SQLStatement;
+import lombok.Getter;
+import lombok.Setter;
 
-public abstract class DatabaseScriptStore extends ApplicationStore {
+/**
+* Class AppContext
+*/
+@Setter
+@Getter
+public class AppContext {
 	
-	protected ArrayList<SQLStatement> dbScriptList = new ArrayList<SQLStatement>();
+	private static AppContext appContext = null;
+	private AppContext() {}
 	
-	@SuppressWarnings("unchecked")
-	public List<SQLStatement> getDBScript() {
-		List<SQLStatement> returnList =  (List<SQLStatement>) this.dbScriptList.clone();
-		return returnList;
+	private String dataDirectoryPath = null;
+	private SQLStatement exportAllObjSqlStatemnt = null;
+	
+	public static AppContext getInstance() {
+		if (appContext == null) {
+			initilizeContext();
+		}
+		return appContext;
+	}
+	private static void initilizeContext() {
+		appContext = new AppContext();
 	}
 }

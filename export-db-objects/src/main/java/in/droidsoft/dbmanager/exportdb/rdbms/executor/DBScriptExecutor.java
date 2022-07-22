@@ -1,7 +1,7 @@
 /*******************************************************************************************************************************
 DBScriptExecutor.java
 
-Copyright © 2022, DroidSoft. All rights reserved.
+Copyright ï¿½ 2022, DroidSoft. All rights reserved.
 The Programs (which include both the software and documentation) contain proprietary information of DroidSoft;
 they are provided under a license agreement containing restrictions on use and disclosure and are also protected by
 copyright, patent and other intellectual and industrial property law. Reverse engineering, disassembly or de-compilation of
@@ -35,6 +35,13 @@ import in.droidsoft.dbmanager.exportdb.util.AppUtils;
 
 public class DBScriptExecutor {
 
+	public ResultSet executeDBScriptForSelect(Connection dbConnection, SQLStatement sqlStatement) {
+		if (sqlStatement == null || sqlStatement.getScriptLine() == null || sqlStatement.getScriptLine().trim().length() == 0) {
+			System.out.println("[ERROR] ***No Script lines to execute.");
+		}
+		
+		
+	}
 	public void executeDBScript(Connection dbConnection, List<SQLStatement> sqlScript) throws SQLException {
 		if (sqlScript == null || sqlScript.size() == 0) {
 			System.out.println("[ERROR] No Script lines to execute.");
@@ -47,7 +54,7 @@ public class DBScriptExecutor {
 		dbConnection.commit();
 	}
 	
-	public boolean executeSQLStatement(Connection dbConnection, SQLStatement sqlStatement) {
+	private boolean executeSQLStatement(Connection dbConnection, SQLStatement sqlStatement) {
 		PreparedStatement preStmt = null;
 		try {
 			preStmt = dbConnection.prepareStatement(sqlStatement.getScriptLine());

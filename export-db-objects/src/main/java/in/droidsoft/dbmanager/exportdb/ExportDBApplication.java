@@ -1,5 +1,5 @@
 /*******************************************************************************************************************************
-DatabaseScriptStore.java
+ExportDBApplication.java
 
 Copyright � 2022, DroidSoft. All rights reserved.
 The Programs (which include both the software and documentation) contain proprietary information of DroidSoft;
@@ -22,20 +22,15 @@ Last modified on : Jul 19, 2022
 
 *******************************************************************************************************************************/
 
-package in.droidsoft.dbmanager.exportdb.store;
+package in.droidsoft.dbmanager.exportdb;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import in.droidsoft.dbmanager.exportdb.rdbms.model.SQLStatement;
+@SpringBootApplication
+public class ExportDBApplication {
 
-public abstract class DatabaseScriptStore extends ApplicationStore {
-	
-	protected ArrayList<SQLStatement> dbScriptList = new ArrayList<SQLStatement>();
-	
-	@SuppressWarnings("unchecked")
-	public List<SQLStatement> getDBScript() {
-		List<SQLStatement> returnList =  (List<SQLStatement>) this.dbScriptList.clone();
-		return returnList;
+	public static void main(String[] args) {
+		SpringApplication.run(ExportDBApplication.class, args);
 	}
 }

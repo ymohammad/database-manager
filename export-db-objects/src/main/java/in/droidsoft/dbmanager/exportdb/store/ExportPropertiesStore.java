@@ -1,7 +1,7 @@
 /*******************************************************************************************************************************
-DatabasePropsStore.java
+ExportPropertiesStore.java
 
-Copyright ï¿½ 2022, DroidSoft. All rights reserved.
+Copyright © 2022, DroidSoft. All rights reserved.
 The Programs (which include both the software and documentation) contain proprietary information of DroidSoft;
 they are provided under a license agreement containing restrictions on use and disclosure and are also protected by
 copyright, patent and other intellectual and industrial property law. Reverse engineering, disassembly or de-compilation of
@@ -15,10 +15,10 @@ reproduced or transmitted in any form or by any means, electronic or mechanical,
 written permission of DroidSoft.
 
 Author : ymohammad
-Date   : Jul 19, 2022
+Date   : Jul 21, 2022
 
 Last modified by : ymohammad
-Last modified on : Jul 19, 2022
+Last modified on : Jul 21, 2022
 
 *******************************************************************************************************************************/
 
@@ -29,39 +29,34 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
-import in.droidsoft.dbmanager.exportdb.config.AppContext;
-import in.droidsoft.dbmanager.exportdb.rdbms.model.DBProps;
+import in.droidsoft.dbmanager.exportdb.props.ExportProp;
 import in.droidsoft.dbmanager.exportdb.util.AppConstants;
 import in.droidsoft.dbmanager.exportdb.util.AppUtils;
+import lombok.Getter;
 
-public class DatabasePropsStore {
+/**
+* Class ExportPropertiesStore
+*/
+@Getter
+public class ExportPropertiesStore extends ApplicationStore {
+	private ExportProp exportProps = null;
+	
+	public ExportPropertiesStore() {
+		super();
+		this.loadExportProps();
+	}
 
-	private DBProps dbProps = null;
-	protected AppContext appContext = null;
-	
-	public DatabasePropsStore() {
-		this.appContext = AppContext.getInstance();
-		this.loadDBProperties();
-	}
-	
-	public DBProps getDatabaseProps() {
-		DBProps clonedCopy = new DBProps(this.dbProps);
-		return clonedCopy;
-	}
-	private void loadDBProperties() {
-		File dbPropsFile = AppUtils.getResourceFile(this.appContext.getDataDirectoryPath(), AppConstants.DB_PROPERTIES_FILE_NAME);
+	private void loadExportProps() {
+		File exoprtPropFile = AppUtils.getResourceFile(this.appContext.getDataDirectoryPath(), AppConstants.EXPORT_PROPERTIES_FILE_NAME);
 		FileReader reader = null;
 		try {
-			reader = new FileReader(dbPropsFile);
+			reader = new FileReader(exoprtPropFile);
 			Properties props = new Properties();
 			props.load(reader);
 			
-			String driverClassName = props.getProperty("source.driverClassName");
-			String dbUrl = props.getProperty("source.jdbcUrl");
-			String userName = props.getProperty("source.username");
-			String password = props.getProperty("source.password");
+			String databaseType = props.getProperty("databaseType");
 			
-			this.dbProps = new DBProps(userName, password, dbUrl, driverClassName);
+			this.exportProps = new ExportProp(databaseType);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {

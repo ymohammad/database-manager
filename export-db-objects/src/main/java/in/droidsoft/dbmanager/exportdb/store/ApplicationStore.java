@@ -1,7 +1,7 @@
 /*******************************************************************************************************************************
-DatabasePropsStore.java
+ApplicationStore.java
 
-Copyright ï¿½ 2022, DroidSoft. All rights reserved.
+Copyright © 2022, DroidSoft. All rights reserved.
 The Programs (which include both the software and documentation) contain proprietary information of DroidSoft;
 they are provided under a license agreement containing restrictions on use and disclosure and are also protected by
 copyright, patent and other intellectual and industrial property law. Reverse engineering, disassembly or de-compilation of
@@ -15,63 +15,23 @@ reproduced or transmitted in any form or by any means, electronic or mechanical,
 written permission of DroidSoft.
 
 Author : ymohammad
-Date   : Jul 19, 2022
+Date   : Jul 21, 2022
 
 Last modified by : ymohammad
-Last modified on : Jul 19, 2022
+Last modified on : Jul 21, 2022
 
 *******************************************************************************************************************************/
 
 package in.droidsoft.dbmanager.exportdb.store;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Properties;
-
 import in.droidsoft.dbmanager.exportdb.config.AppContext;
-import in.droidsoft.dbmanager.exportdb.rdbms.model.DBProps;
-import in.droidsoft.dbmanager.exportdb.util.AppConstants;
-import in.droidsoft.dbmanager.exportdb.util.AppUtils;
 
-public class DatabasePropsStore {
-
-	private DBProps dbProps = null;
+/**
+* Class ApplicationStore
+*/
+public abstract class ApplicationStore {
 	protected AppContext appContext = null;
-	
-	public DatabasePropsStore() {
+	public ApplicationStore() {
 		this.appContext = AppContext.getInstance();
-		this.loadDBProperties();
-	}
-	
-	public DBProps getDatabaseProps() {
-		DBProps clonedCopy = new DBProps(this.dbProps);
-		return clonedCopy;
-	}
-	private void loadDBProperties() {
-		File dbPropsFile = AppUtils.getResourceFile(this.appContext.getDataDirectoryPath(), AppConstants.DB_PROPERTIES_FILE_NAME);
-		FileReader reader = null;
-		try {
-			reader = new FileReader(dbPropsFile);
-			Properties props = new Properties();
-			props.load(reader);
-			
-			String driverClassName = props.getProperty("source.driverClassName");
-			String dbUrl = props.getProperty("source.jdbcUrl");
-			String userName = props.getProperty("source.username");
-			String password = props.getProperty("source.password");
-			
-			this.dbProps = new DBProps(userName, password, dbUrl, driverClassName);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
 	}
 }
