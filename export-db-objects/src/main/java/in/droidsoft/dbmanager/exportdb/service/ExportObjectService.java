@@ -30,6 +30,7 @@ import java.util.List;
 
 import in.droidsoft.dbmanager.exportdb.rdbms.model.ExportObjectModel;
 import in.droidsoft.dbmanager.exportdb.rdbms.model.ExportObjectTypeModel;
+import in.droidsoft.dbmanager.exportdb.rdbms.model.ExportOptionsModel;
 import in.droidsoft.dbmanager.exportdb.rdbms.model.SchemaBasedExportObjectModel;
 
 /**
@@ -41,6 +42,10 @@ public abstract class ExportObjectService {
 	 * @return
 	 */
 	public abstract String getServiceType();
+	
+	public abstract String getDBObjectDDLScriptText(String owner, String objectType, String objectName);
+	
+	public abstract void setExportObjectsProperties(ExportOptionsModel options);
 	
 	/**
 	 * Gives the list of Exporting Objects.

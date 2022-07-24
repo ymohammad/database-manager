@@ -1,6 +1,10 @@
 package in.droidsoft.dbmanager.exportdb.util;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.sql.Clob;
+import java.sql.SQLException;
 
 public class AppUtils {
 
@@ -50,5 +54,38 @@ public class AppUtils {
 	public static boolean isEmpty(String str) {
 		boolean res = str == null || str.trim().length() == 0;
 		return res;
+	}
+	
+	public static String convertClobToString(Clob clob) throws IOException, SQLException {
+		StringBuffer sb = new StringBuffer();
+		if (clob == null) {
+			return sb.toString();
+		}
+		String line = null;
+		BufferedReader buffReader = null;
+		try {
+			buffReader = new BufferedReader(clob.getCharacterStream());
+			while ((line = buffReader.readLine()) != null) {
+				sb.append(line).append("\r\n");
+			}
+		} finally {
+			if (buffReader != null) {
+				buffReader.close();
+			}
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given property if yes, "true" to true and otherwise false.
+	 * @param property
+	 * @return
+	 */
+	public static boolean convertToBoolean(String propVal) {
+		if (isEmpty(propVal)) return false;
+		
+		if (propVal.equalsIgnoreCase("yes") || propVal.equalsIgnoreCase("true")) return true;
+		
+		return false;
 	}
 }

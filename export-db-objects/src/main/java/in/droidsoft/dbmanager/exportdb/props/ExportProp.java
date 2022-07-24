@@ -24,6 +24,7 @@ Last modified on : Jul 21, 2022
 
 package in.droidsoft.dbmanager.exportdb.props;
 
+import in.droidsoft.dbmanager.exportdb.rdbms.model.ExportOptionsModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -35,7 +36,10 @@ import lombok.NoArgsConstructor;
 public class ExportProp {
 	private String databaseType;
 	
-	public ExportProp(String databaseType) {
+	private ExportOptionsModel exportOptions;
+	
+	public ExportProp(String databaseType, ExportOptionsModel expoOptModel) {
 		this.databaseType = databaseType;
+		this.exportOptions = expoOptModel;
 	}
 }

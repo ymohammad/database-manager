@@ -24,6 +24,8 @@ Last modified on : Jul 21, 2022
 
 package in.droidsoft.dbmanager.exportdb.rdbms.oracle.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +35,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import in.droidsoft.dbmanager.exportdb.rdbms.model.ExportObjectModel;
+import in.droidsoft.dbmanager.exportdb.rdbms.model.ExportObjectOptionI;
+import in.droidsoft.dbmanager.exportdb.rdbms.model.oracle.OracleExportOptionModel;
 import in.droidsoft.dbmanager.exportdb.rdbms.oracle.repository.AllObjectRepsoitory;
+import in.droidsoft.dbmanager.exportdb.rdbms.oracle.repository.ObjectScriptTextRepository;
 import in.droidsoft.dbmanager.exportdb.service.ExportObjectService;
 import in.droidsoft.dbmanager.exportdb.util.AppConstants;
 
@@ -45,6 +50,9 @@ public class OracleExportObjectService extends ExportObjectService {
 	
 	@Autowired
 	private AllObjectRepsoitory allObjRepo;
+	
+	@Autowired
+	private ObjectScriptTextRepository objScriptRepo;
 	
 	public static final String SERVICE_TYPE = AppConstants.ORACLE_SERVICE_TYPE;
 
@@ -81,5 +89,23 @@ public class OracleExportObjectService extends ExportObjectService {
 	@Override
 	public String getServiceType() {
 		return SERVICE_TYPE;
+	}
+
+	@Override
+	public String getDBObjectDDLScriptText(String owner, String objectType, String objectName) {
+		try {
+			return this.objScriptRepo.getDBObjectScriptText(objectName, objectType, objectName);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public void setExportObjectsProperties(ExportObjectOptionI options) {
+		OracleExportOptionModel oraOption = (OracleExportOptionModel)options;
+		this.objScriptRepo.setExportProperties(oraOption);
 	}
 }

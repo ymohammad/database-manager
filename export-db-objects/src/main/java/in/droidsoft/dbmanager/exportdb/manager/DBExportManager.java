@@ -25,13 +25,17 @@ Last modified on : Jul 22, 2022
 package in.droidsoft.dbmanager.exportdb.manager;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import in.droidsoft.dbmanager.exportdb.config.AppContext;
+import in.droidsoft.dbmanager.exportdb.io.DBObjectFileUtils;
 import in.droidsoft.dbmanager.exportdb.rdbms.model.ExportObjectModel;
+import in.droidsoft.dbmanager.exportdb.rdbms.model.ExportObjectTypeModel;
+import in.droidsoft.dbmanager.exportdb.rdbms.model.ExportOptionsModel;
 import in.droidsoft.dbmanager.exportdb.rdbms.model.SQLStatement;
 import in.droidsoft.dbmanager.exportdb.rdbms.model.SchemaBasedExportObjectModel;
 import in.droidsoft.dbmanager.exportdb.service.ExportObjectService;
@@ -87,13 +91,90 @@ public class DBExportManager {
 		
 		logMsg("Number of Objects to Export :" + exportObjectsList.size());
 		List<SchemaBasedExportObjectModel> schemaBasedObjsList = exportService.prepareSchemaBasedExportModelList(exportObjectsList);
-		
-		System.out.println("DBExportManager.startExportProcess() schemaBasedObjsList:" + schemaBasedObjsList);
+		boolean isContinue = this.printAndConfirmSchemaExport(schemaBasedObjsList);
+		if (isContinue) {
+			this.performDBObjectsExport(appStore, exportService, schemaBasedObjsList);
+		}
+		//System.out.println("DBExportManager.startExportProcess() schemaBasedObjsList:" + schemaBasedObjsList);
 		return true;
 	}
 	
-	
 
+	private void performDBObjectsExport(ApplicationStore appStore, ExportObjectService exportService, List<SchemaBasedExportObjectModel> schemaBasedObjsList) {
+		logMsg("Starting the Export operation. ");
+		String messagePad = "\t";
+		List<ExportObjectModel> exportFailedList = new ArrayList<ExportObjectModel>();
+		try {
+			ExportOptionsModel exportOption = appStore.getExportProps().getExportOptions();
+			exportService.setExportObjectsProperties(exportOption);
+			
+			for (SchemaBasedExportObjectModel schemaObj : schemaBasedObjsList) {
+				String ownerName = schemaObj.getOwner().toUpperCase();
+				List<ExportObjectTypeModel> exportObjectTypeList = schemaObj.getExportObjectTypeList();
+				logMsg("Exporting objects of Owner - " + ownerName);
+				
+				if (exportObjectTypeList == null || exportObjectTypeList.size() == 0 ) {
+					logMsg("No Objects available to export for " + ownerName);
+					continue;
+				}
+				logMsg("Number of Object types to export " + exportObjectTypeList.size());
+				
+				for (ExportObjectTypeModel eachObjType : exportObjectTypeList) {
+					String objectTypeName = eachObjType.getObjectType();
+					List<ExportObjectModel> objectList = eachObjType.getObjectList();
+					if (AppUtils.isEmpty(objectTypeName)) {
+						continue;
+					}
+					logMsg("Exporting type " + objectTypeName + ", Total Objects :" + (objectList != null ? objectList.size() : 0));
+					
+					if (objectList != null) {
+						for (ExportObjectModel eachModel: objectList) {
+							String objName = eachModel.getObjectName();
+							if (AppUtils.isEmpty(objName)) {
+								continue;
+							}
+							objName = objName.toUpperCase();
+							objectTypeName = objectTypeName.toUpperCase();
+							logMsg("Exporting Object :" + objName);
+							
+							String dbScript = exportService.getDBObjectDDLScriptText(ownerName, objectTypeName, objName);
+							if (AppUtils.isEmpty(dbScript)) {
+								logErrorMsg(messagePad + "Failed to fetch the DDL Script");
+								exportFailedList.add(eachModel);
+								continue;
+							}
+							
+							logMsg(messagePad + "DDL Script fetched successfully. Number of characters in the Script - " + dbScript.length());
+							String objParentDirpath = this.prepareObjectParentDirPath(ownerName, objectTypeName);
+							String objFileName = objName + "." + exportOption.getObjectExtension(objectTypeName);
+							logMsg(messagePad + "Exporting the DDL to file - " + objParentDirpath + File.separator + objFileName);
+							boolean isExported = DBObjectFileUtils.createDBObjectFile(objParentDirpath, objFileName, dbScript);
+							if (isExported) {
+								logMsg(messagePad + "Exporting the DDL to file SUCCESSFUL.");
+							} else {
+								exportFailedList.add(eachModel);
+								logErrorMsg(messagePad + "Exporting the DDL to file FAILED.");
+							}
+						}
+					}
+				}
+				
+			}
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	private String prepareObjectParentDirPath(String ownerName, String objectType) {
+		String outputDirPath = this.appContext.getDataDirectoryPath() + File.separator + AppConstants.DB_OBJECTS_OUTPUT_DIR_NAME;
+		outputDirPath += File.separator + ownerName.toUpperCase();
+		outputDirPath += File.separator + objectType.toUpperCase();
+		return outputDirPath;
+	}
+	private boolean printAndConfirmSchemaExport(List<SchemaBasedExportObjectModel> schemaBasedObjsList) {
+		return true;
+	}
+	
 	private ExportObjectService getExportServiceForDatabaseType(String databaseType) {
 		for (ExportObjectService eachService: this.exportServiceList) {
 			if (eachService.getServiceType() != null && eachService.getServiceType().equalsIgnoreCase(databaseType)) {

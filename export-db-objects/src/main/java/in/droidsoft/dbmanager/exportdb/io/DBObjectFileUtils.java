@@ -24,8 +24,35 @@ Last modified on : Jul 19, 2022
 
 package in.droidsoft.dbmanager.exportdb.io;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
 * Class DBObjectFileUtils
 */
 public class DBObjectFileUtils {
+	
+	public static boolean createDBObjectFile(String parentDirectoryPath, String objFileName, String objScriptText) throws IOException {
+		File parentDir = new File(parentDirectoryPath);
+		boolean isDirCreated = parentDir.isDirectory();
+		if (!isDirCreated) {
+			isDirCreated = parentDir.mkdirs();
+		}
+		if (!isDirCreated) {
+			throw new RuntimeException("Unable to create the directory " + parentDir.getAbsolutePath());
+		}
+		
+		File objectFile = new File(parentDir, objFileName);
+		writeToFile(objectFile, objScriptText);
+		return true;
+	}
+	
+	private static void writeToFile(File file, String content) throws IOException {
+		Path path = Paths.get(file.getAbsolutePath());
+	    byte[] strToBytes = content.getBytes();
+	    Files.write(path, strToBytes);
+	}
 }
