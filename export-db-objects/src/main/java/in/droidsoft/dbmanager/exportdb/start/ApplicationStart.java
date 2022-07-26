@@ -53,9 +53,9 @@ public class ApplicationStart implements ApplicationListener<ContextRefreshedEve
 	private DBExportManager exportManager;
 	
 	public void onApplicationEvent(ContextRefreshedEvent event) {
-		System.out.println("******************************************************************************");
+		System.out.println(AppUtils.getConsoleTopHeaderSeprator(80));
 		System.out.println("\t\tSTARTING EXPORT PROCESS");
-		System.out.println("******************************************************************************");
+		System.out.println(AppUtils.getConsoleTopHeaderSeprator(80));
 		//System.out.println(event);
 		start();
 	}

@@ -61,6 +61,7 @@ public class ExportPropertiesStore {
 			String databaseType = props.getProperty("databaseType");
 			ExportOptionsModel expoOptModel = this.prepareAndGetExpoOptModel(props);
 			this.updateFileExtensionInfo(expoOptModel, props);
+			this.updateObjectTypeAndDirectoryNameInfo(expoOptModel, props);
 			this.exportProps = new ExportProp(databaseType, expoOptModel);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -85,6 +86,17 @@ public class ExportPropertiesStore {
 		}
 	}
 
+	private void updateObjectTypeAndDirectoryNameInfo(ExportOptionsModel expoOptModel, Properties props) {
+		for (String objType: AppConstants.STANDARD_OBJECT_TYPES_ARR) {
+			String objTypeKey = expoOptModel.prepareAndgetExtensionMapKey(objType);
+			String propValue = props.getProperty(AppConstants.DIR_NAME_PREFIX + objTypeKey);
+			if (AppUtils.isEmpty(propValue)) {
+				continue;
+			}
+			expoOptModel.addObjectTypeAndDirectoryName(objType, propValue);
+		}
+	}
+	
 	/**
 	 * Prepares and get Export Options Model.
 	 * @param props
@@ -93,12 +105,12 @@ public class ExportPropertiesStore {
 	private ExportOptionsModel prepareAndGetExpoOptModel(Properties props) {
 		ExportOptionsModel returnObj = new ExportOptionsModel();
 		returnObj.setTableSpace(AppUtils.convertToBoolean(props.getProperty("INCLUDE_TABLE_SPACE")));
-		returnObj.setEmitSchema(AppUtils.convertToBoolean("INCLUDE_SCHEMA_NAME"));
-		returnObj.setPhysicalProperties(AppUtils.convertToBoolean("INCLUDE_PHYSICAL_PROPERTIES"));
-		returnObj.setPretty(AppUtils.convertToBoolean("EXPORT_SCRIPT_PRETTY"));
-		returnObj.setSegmentAttribute(AppUtils.convertToBoolean("INCLUDE_SEGMENT_ATTRIBUTES"));
-		returnObj.setSqlTerminator(AppUtils.convertToBoolean("END_SQL_SCRIPT_WITH_TERMINATOR"));
-		returnObj.setStorage(AppUtils.convertToBoolean("INCLUDE_STORAGE_INFO"));
+		returnObj.setEmitSchema(AppUtils.convertToBoolean(props.getProperty("INCLUDE_SCHEMA_NAME")));
+		returnObj.setPhysicalProperties(AppUtils.convertToBoolean(props.getProperty("INCLUDE_PHYSICAL_PROPERTIES")));
+		returnObj.setPretty(AppUtils.convertToBoolean(props.getProperty("EXPORT_SCRIPT_PRETTY")));
+		returnObj.setSegmentAttribute(AppUtils.convertToBoolean(props.getProperty("INCLUDE_SEGMENT_ATTRIBUTES")));
+		returnObj.setSqlTerminator(AppUtils.convertToBoolean(props.getProperty("END_SQL_SCRIPT_WITH_TERMINATOR")));
+		returnObj.setStorage(AppUtils.convertToBoolean(props.getProperty("INCLUDE_STORAGE_INFO")));
 		return returnObj;
 	}
 }

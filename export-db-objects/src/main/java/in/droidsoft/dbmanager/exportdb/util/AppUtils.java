@@ -82,10 +82,32 @@ public class AppUtils {
 	 * @return
 	 */
 	public static boolean convertToBoolean(String propVal) {
+		//System.out.println("AppUtils.convertToBoolean()" + propVal);
 		if (isEmpty(propVal)) return false;
 		
 		if (propVal.equalsIgnoreCase("yes") || propVal.equalsIgnoreCase("true")) return true;
 		
 		return false;
+	}
+
+	/**
+	 * Separator to show on console when new Type export starts.
+	 * @param size
+	 * @return
+	 */
+	public static String getConsoleTypeSeparator(int size) {
+		StringBuffer buff = new StringBuffer();
+		for (int i = 0; i<size; i++) {
+			buff.append("-");
+		}
+		return buff.toString();
+	}
+
+	public static String getConsoleTopHeaderSeprator(int size) {
+		StringBuffer buff = new StringBuffer();
+		for (int i = 0; i<size; i++) {
+			buff.append("*");
+		}
+		return buff.toString();
 	}
 }

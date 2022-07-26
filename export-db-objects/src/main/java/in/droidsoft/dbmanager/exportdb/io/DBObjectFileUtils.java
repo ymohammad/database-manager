@@ -46,7 +46,7 @@ public class DBObjectFileUtils {
 		}
 		
 		File objectFile = new File(parentDir, objFileName);
-		writeToFile(objectFile, objScriptText);
+		writeToFile(objectFile, objScriptText.trim());
 		return true;
 	}
 	

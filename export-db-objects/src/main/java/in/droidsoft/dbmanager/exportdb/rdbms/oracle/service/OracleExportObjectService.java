@@ -29,14 +29,15 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import in.droidsoft.dbmanager.exportdb.rdbms.model.ExportObjectModel;
-import in.droidsoft.dbmanager.exportdb.rdbms.model.ExportObjectOptionI;
-import in.droidsoft.dbmanager.exportdb.rdbms.model.oracle.OracleExportOptionModel;
+import in.droidsoft.dbmanager.exportdb.rdbms.model.ExportOptionsModel;
 import in.droidsoft.dbmanager.exportdb.rdbms.oracle.repository.AllObjectRepsoitory;
 import in.droidsoft.dbmanager.exportdb.rdbms.oracle.repository.ObjectScriptTextRepository;
 import in.droidsoft.dbmanager.exportdb.service.ExportObjectService;
@@ -55,7 +56,9 @@ public class OracleExportObjectService extends ExportObjectService {
 	private ObjectScriptTextRepository objScriptRepo;
 	
 	public static final String SERVICE_TYPE = AppConstants.ORACLE_SERVICE_TYPE;
-
+	
+	private EntityManager localEntityManager = null;
+	
 	@Override
 	public List<ExportObjectModel> getExportObjectList(String sqlQuery) {
 		List<Tuple> allObjectsEntity = this.allObjRepo.getAllObjectsEntity(sqlQuery);
@@ -74,15 +77,6 @@ public class OracleExportObjectService extends ExportObjectService {
 					return newEntity;
 				})
 				.collect(Collectors.toList());
-		
-//		for (Tuple eachEntity : allObjectsEntity) {
-//			ExportObjectModel newEntity = new ExportObjectModel();
-//			//BeanUtils.copyProperties(eachEntity, newEntity);
-//			newEntity.setObjectName(eachEntity.getOBJECT_NAME());
-//			newEntity.setObjectType(eachEntity.getOBJECT_TYPE());
-//			newEntity.setOwner(eachEntity.getOWNER());
-//			returnList.add(newEntity);
-//		}
 		return returnList;
 	}
 
@@ -92,9 +86,10 @@ public class OracleExportObjectService extends ExportObjectService {
 	}
 
 	@Override
+	@Transactional
 	public String getDBObjectDDLScriptText(String owner, String objectType, String objectName) {
 		try {
-			return this.objScriptRepo.getDBObjectScriptText(objectName, objectType, objectName);
+			return this.objScriptRepo.getDBObjectScriptText(owner, objectType, objectName);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -104,8 +99,11 @@ public class OracleExportObjectService extends ExportObjectService {
 	}
 
 	@Override
-	public void setExportObjectsProperties(ExportObjectOptionI options) {
-		OracleExportOptionModel oraOption = (OracleExportOptionModel)options;
-		this.objScriptRepo.setExportProperties(oraOption);
+	@Transactional
+	public void setExportObjectsProperties(ExportOptionsModel options) {
+//		EntityManagerFactory emf = Persistence.createEntityManagerFactory("TEST");
+//		localEntityManager = emf.createEntityManager();
+//		localEntityManager.getTransaction().begin();
+		this.objScriptRepo.setExportProperties(options);
 	}
 }
