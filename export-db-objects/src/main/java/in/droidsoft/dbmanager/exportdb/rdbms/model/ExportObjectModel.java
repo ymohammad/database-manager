@@ -1,7 +1,7 @@
 /*******************************************************************************************************************************
 ExportObjectModel.java
 
-Copyright Â© 2022, DroidSoft. All rights reserved.
+Copyright © 2022, DroidSoft. All rights reserved.
 The Programs (which include both the software and documentation) contain proprietary information of DroidSoft;
 they are provided under a license agreement containing restrictions on use and disclosure and are also protected by
 copyright, patent and other intellectual and industrial property law. Reverse engineering, disassembly or de-compilation of
@@ -15,10 +15,10 @@ reproduced or transmitted in any form or by any means, electronic or mechanical,
 written permission of DroidSoft.
 
 Author : ymohammad
-Date   : Jul 21, 2022
+Date   : Jul 22, 2022
 
 Last modified by : ymohammad
-Last modified on : Jul 21, 2022
+Last modified on : Jul 22, 2022
 
 *******************************************************************************************************************************/
 

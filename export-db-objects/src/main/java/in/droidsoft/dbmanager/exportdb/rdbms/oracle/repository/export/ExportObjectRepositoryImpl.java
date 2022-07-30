@@ -29,22 +29,22 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.Tuple;
 
 import org.springframework.stereotype.Repository;
-
-import in.droidsoft.dbmanager.exportdb.rdbms.model.oracle.AllObjectsEntity;
 
 /**
 * Class ExportObjectRepositoryImpl
 */
 @Repository
 public class ExportObjectRepositoryImpl implements ExportObjectRepository {
-	 @PersistenceContext
-	 private EntityManager entityManager;
+	@PersistenceContext
+	private EntityManager srcEntityManager;
 
-	 public List<AllObjectsEntity> getAllObjectsEntity(String nativeSqlQuery) {
-		 Query query = this.entityManager.createNativeQuery(nativeSqlQuery);
-		 List<AllObjectsEntity> queryResult = query.getResultList();
-		 return queryResult;
-	 }
+	@Override
+	public List<Tuple> getAllObjectsEntity(String nativeSqlQuery) {
+		Query query = this.srcEntityManager.createNativeQuery(nativeSqlQuery, Tuple.class);
+		List<Tuple> queryResult = query.getResultList();
+		return queryResult;
+	}
 }

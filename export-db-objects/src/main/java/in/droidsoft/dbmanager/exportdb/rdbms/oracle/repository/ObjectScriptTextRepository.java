@@ -1,7 +1,7 @@
 /*******************************************************************************************************************************
-ExportObjectService.java
+ObjectScriptTextRepository.java
 
-Copyright Â© 2022, DroidSoft. All rights reserved.
+Copyright © 2022, DroidSoft. All rights reserved.
 The Programs (which include both the software and documentation) contain proprietary information of DroidSoft;
 they are provided under a license agreement containing restrictions on use and disclosure and are also protected by
 copyright, patent and other intellectual and industrial property law. Reverse engineering, disassembly or de-compilation of
@@ -15,25 +15,43 @@ reproduced or transmitted in any form or by any means, electronic or mechanical,
 written permission of DroidSoft.
 
 Author : ymohammad
-Date   : Jul 21, 2022
+Date   : Jul 24, 2022
 
 Last modified by : ymohammad
-Last modified on : Jul 21, 2022
+Last modified on : Jul 24, 2022
 
 *******************************************************************************************************************************/
 
-package in.droidsoft.dbmanager.exportdb.rdbms.oracle.service;
+package in.droidsoft.dbmanager.exportdb.rdbms.oracle.repository;
 
-import java.util.List;
+import java.io.IOException;
+import java.sql.SQLException;
 
-import in.droidsoft.dbmanager.exportdb.rdbms.model.ExportObjectModel;
+import javax.persistence.EntityManager;
+
+import in.droidsoft.dbmanager.exportdb.rdbms.model.ExportOptionsModel;
 
 /**
-* Class ExportObjectService
+* Class ObjectScriptTextRepository
 */
-public class ExportObjectService {
+public interface ObjectScriptTextRepository {
 	
-	public List<ExportObjectModel> getExportObjectList() {
-		
-	}
+	/**
+	 * It sets the Settings for active session based on the given details like including STORAGE information in the
+	 * exported SQL script. Similarly other settings.
+	 * @param localEntityManager 
+	 */
+	public void setExportProperties(ExportOptionsModel options);
+	
+	/**
+	 * It exports the SQL Script Text of the given Object owner and name.
+	 * 
+	 * @param objectOwner
+	 * @param objectType
+	 * @param objectName
+	 * @return
+	 * @throws SQLException 
+	 * @throws IOException 
+	 */
+	public String getDBObjectScriptText(String owner, String objectType, String objectName) throws IOException, SQLException;
 }

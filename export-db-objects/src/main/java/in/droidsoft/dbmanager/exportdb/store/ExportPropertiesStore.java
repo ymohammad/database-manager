@@ -29,7 +29,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
+import in.droidsoft.dbmanager.exportdb.config.AppContext;
 import in.droidsoft.dbmanager.exportdb.props.ExportProp;
+import in.droidsoft.dbmanager.exportdb.rdbms.model.ExportOptionsModel;
 import in.droidsoft.dbmanager.exportdb.util.AppConstants;
 import in.droidsoft.dbmanager.exportdb.util.AppUtils;
 import lombok.Getter;
@@ -38,11 +40,13 @@ import lombok.Getter;
 * Class ExportPropertiesStore
 */
 @Getter
-public class ExportPropertiesStore extends ApplicationStore {
+public class ExportPropertiesStore {
+	private AppContext appContext;
+	
 	private ExportProp exportProps = null;
 	
-	public ExportPropertiesStore() {
-		super();
+	public ExportPropertiesStore(AppContext appContext) {
+		this.appContext = appContext;
 		this.loadExportProps();
 	}
 
@@ -55,8 +59,10 @@ public class ExportPropertiesStore extends ApplicationStore {
 			props.load(reader);
 			
 			String databaseType = props.getProperty("databaseType");
-			
-			this.exportProps = new ExportProp(databaseType);
+			ExportOptionsModel expoOptModel = this.prepareAndGetExpoOptModel(props);
+			this.updateFileExtensionInfo(expoOptModel, props);
+			this.updateObjectTypeAndDirectoryNameInfo(expoOptModel, props);
+			this.exportProps = new ExportProp(databaseType, expoOptModel);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -68,5 +74,43 @@ public class ExportPropertiesStore extends ApplicationStore {
 				}
 			}
 		}
+	}
+	/**
+	 * Updates the File extension information in the map. It will be used while creation the extension files.
+	 * @param expoOptModel
+	 * @param props
+	 */
+	private void updateFileExtensionInfo(ExportOptionsModel expoOptModel, Properties props) {
+		for (String objType: AppConstants.STANDARD_OBJECT_TYPES_ARR) {
+			expoOptModel.addObjectExtension(objType, props.getProperty(expoOptModel.prepareAndgetExtensionMapKey(objType)));
+		}
+	}
+
+	private void updateObjectTypeAndDirectoryNameInfo(ExportOptionsModel expoOptModel, Properties props) {
+		for (String objType: AppConstants.STANDARD_OBJECT_TYPES_ARR) {
+			String objTypeKey = expoOptModel.prepareAndgetExtensionMapKey(objType);
+			String propValue = props.getProperty(AppConstants.DIR_NAME_PREFIX + objTypeKey);
+			if (AppUtils.isEmpty(propValue)) {
+				continue;
+			}
+			expoOptModel.addObjectTypeAndDirectoryName(objType, propValue);
+		}
+	}
+	
+	/**
+	 * Prepares and get Export Options Model.
+	 * @param props
+	 * @return
+	 */
+	private ExportOptionsModel prepareAndGetExpoOptModel(Properties props) {
+		ExportOptionsModel returnObj = new ExportOptionsModel();
+		returnObj.setTableSpace(AppUtils.convertToBoolean(props.getProperty("INCLUDE_TABLE_SPACE")));
+		returnObj.setEmitSchema(AppUtils.convertToBoolean(props.getProperty("INCLUDE_SCHEMA_NAME")));
+		returnObj.setPhysicalProperties(AppUtils.convertToBoolean(props.getProperty("INCLUDE_PHYSICAL_PROPERTIES")));
+		returnObj.setPretty(AppUtils.convertToBoolean(props.getProperty("EXPORT_SCRIPT_PRETTY")));
+		returnObj.setSegmentAttribute(AppUtils.convertToBoolean(props.getProperty("INCLUDE_SEGMENT_ATTRIBUTES")));
+		returnObj.setSqlTerminator(AppUtils.convertToBoolean(props.getProperty("END_SQL_SCRIPT_WITH_TERMINATOR")));
+		returnObj.setStorage(AppUtils.convertToBoolean(props.getProperty("INCLUDE_STORAGE_INFO")));
+		return returnObj;
 	}
 }

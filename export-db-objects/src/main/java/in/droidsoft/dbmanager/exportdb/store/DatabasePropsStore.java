@@ -29,6 +29,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import in.droidsoft.dbmanager.exportdb.config.AppContext;
 import in.droidsoft.dbmanager.exportdb.rdbms.model.DBProps;
 import in.droidsoft.dbmanager.exportdb.util.AppConstants;
@@ -37,10 +39,11 @@ import in.droidsoft.dbmanager.exportdb.util.AppUtils;
 public class DatabasePropsStore {
 
 	private DBProps dbProps = null;
-	protected AppContext appContext = null;
+	
+	@Autowired
+	private AppContext appContext = null;
 	
 	public DatabasePropsStore() {
-		this.appContext = AppContext.getInstance();
 		this.loadDBProperties();
 	}
 	

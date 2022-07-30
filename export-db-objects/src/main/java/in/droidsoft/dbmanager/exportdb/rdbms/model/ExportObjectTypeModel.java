@@ -1,7 +1,7 @@
 /*******************************************************************************************************************************
-DBObjectFileUtils.java
+ExportObjectTypeModel.java
 
-Copyright ï¿½ 2022, DroidSoft. All rights reserved.
+Copyright © 2022, DroidSoft. All rights reserved.
 The Programs (which include both the software and documentation) contain proprietary information of DroidSoft;
 they are provided under a license agreement containing restrictions on use and disclosure and are also protected by
 copyright, patent and other intellectual and industrial property law. Reverse engineering, disassembly or de-compilation of
@@ -15,44 +15,24 @@ reproduced or transmitted in any form or by any means, electronic or mechanical,
 written permission of DroidSoft.
 
 Author : ymohammad
-Date   : Jul 19, 2022
+Date   : Jul 22, 2022
 
 Last modified by : ymohammad
-Last modified on : Jul 19, 2022
+Last modified on : Jul 22, 2022
 
 *******************************************************************************************************************************/
 
-package in.droidsoft.dbmanager.exportdb.io;
+package in.droidsoft.dbmanager.exportdb.rdbms.model;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.List;
+
+import lombok.Data;
 
 /**
-* Class DBObjectFileUtils
+* Class ExportObjectTypeModel
 */
-public class DBObjectFileUtils {
-	
-	public static boolean createDBObjectFile(String parentDirectoryPath, String objFileName, String objScriptText) throws IOException {
-		File parentDir = new File(parentDirectoryPath);
-		boolean isDirCreated = parentDir.isDirectory();
-		if (!isDirCreated) {
-			isDirCreated = parentDir.mkdirs();
-		}
-		if (!isDirCreated) {
-			throw new RuntimeException("Unable to create the directory " + parentDir.getAbsolutePath());
-		}
-		
-		File objectFile = new File(parentDir, objFileName);
-		writeToFile(objectFile, objScriptText.trim());
-		return true;
-	}
-	
-	private static void writeToFile(File file, String content) throws IOException {
-		Path path = Paths.get(file.getAbsolutePath());
-	    byte[] strToBytes = content.getBytes();
-	    Files.write(path, strToBytes);
-	}
+@Data
+public class ExportObjectTypeModel {
+	private String objectType;
+	private List<ExportObjectModel> objectList;
 }

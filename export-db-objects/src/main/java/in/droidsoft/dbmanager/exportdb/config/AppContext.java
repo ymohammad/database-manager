@@ -24,6 +24,8 @@ Last modified on : Jul 20, 2022
 
 package in.droidsoft.dbmanager.exportdb.config;
 
+import org.springframework.stereotype.Component;
+
 import in.droidsoft.dbmanager.exportdb.rdbms.model.SQLStatement;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,21 +35,10 @@ import lombok.Setter;
 */
 @Setter
 @Getter
+@Component
 public class AppContext {
-	
-	private static AppContext appContext = null;
-	private AppContext() {}
 	
 	private String dataDirectoryPath = null;
 	private SQLStatement exportAllObjSqlStatemnt = null;
 	
-	public static AppContext getInstance() {
-		if (appContext == null) {
-			initilizeContext();
-		}
-		return appContext;
-	}
-	private static void initilizeContext() {
-		appContext = new AppContext();
-	}
 }
